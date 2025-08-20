@@ -16,6 +16,10 @@ jobs:
         with:
           python-version: 3.11
 
+
+      - name: Install dependencies
+        run: pip install flake8 black isort
+
       - name: Lint with flake8
         run: flake8
 
