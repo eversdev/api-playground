@@ -18,7 +18,7 @@ jobs:
 
 
       - name: Install dependencies
-        run: pip install flake8 black isort
+        run: pip install flake8 black isort pytest
 
      # - name: Lint with flake8
      #   run: flake8 .
@@ -28,6 +28,9 @@ jobs:
 
       - name: Sort imports with isort
         run: isort .
+
+      - name: Automate tests
+        run: pytest -v
 
 
 
