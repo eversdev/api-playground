@@ -35,8 +35,12 @@ jobs:
       - name: Build Docker image
         run: docker build -t api-playground:latest day1-ip-api
 
-      - name: Run tests in Docker container
-        run: docker run api-playground:latest pytest -v
+      - name: Run containerised tests and remove container
+        run: docker run --rm api-playground:latest pytest -v
+      - name: Run Dockerfile creation
+        run: bash scripts/docker_build.sh
+
+
 
 
 
