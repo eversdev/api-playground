@@ -2,16 +2,16 @@ from flask import Flask
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def home():
-    return"<h1>Hello World</h1>"
+    return "<h1>Hello World</h1>"
+
 
 @app.route("/greet/<name>")
 def greet(name):
     return f"Hello {name}!"
 
+
 if __name__ == "__main__":
     app.run("0.0.0.0", port=5000, debug=True)
-
-
-
