@@ -35,5 +35,8 @@ jobs:
       - name: Build Docker image
         run: docker build -t api-playground:latest day1-ip-api
 
+      - name: Run tests in Docker container
+        run: docker run api-playground:latest pytest -v
+
 
 
