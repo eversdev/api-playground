@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-dir="$(pwd)/api-playground"
+dir="$(pwd)"
 
 # Loop through day1*, day2*, day3* only
 for day_dir in "$dir"/day{1..3}*; do
