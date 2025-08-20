@@ -10,4 +10,8 @@ def test_home_endpoint():
 
 
 def test_greet_endpoint():
-    pass
+    with app.test_client() as client:
+        response = client.get("/greet/John")
+        assert response.data.decode("utf-8") == "Hello John!"
+        assert response.status_code == 200
+
