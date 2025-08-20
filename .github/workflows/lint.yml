@@ -32,10 +32,8 @@ jobs:
       - name: Automate tests
         run: pytest -v
 
-
-
-
-
+      - name: Build Docker image
+        run: docker build -t api-playground:latest day1-ip-api
 
 
 
