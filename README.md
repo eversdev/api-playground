@@ -33,7 +33,7 @@ http://localhost:5000/
 http://localhost:5000/greet/John
 ```
 
-##Endpoints
+## Endpoints
 
 GET / → Returns:
 ```bash
@@ -45,13 +45,13 @@ GET /greet/<name> → Returns:
 Hello John
 ```
 
-##Testing
+## Testing
 ```bash
 pytest -v
 ```
 This verifies that both endpoints return the expected responses.
 
-##Docker
+## Docker
 The project can be containerized:
 
 1. Build the Docker image:
