@@ -2,5 +2,5 @@
 retro*
 __pycache__/
 *.pyc
-
+.idea/
 
