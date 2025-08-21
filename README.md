@@ -4,6 +4,12 @@
 This project demonstrates the practical use of APIs with Flask.  
 It provides two simple HTTP endpoints that return string responses.
 
+### Requirements
+- Python 3.11+
+- Flask
+- pytest (for testing)
+- Docker (optional)
+
 ## Installation
 Install the required Python packages from `requirements.txt`:
 
