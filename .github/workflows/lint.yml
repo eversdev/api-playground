@@ -37,6 +37,7 @@ jobs:
 
       - name: Run containerised tests and remove container
         run: docker run --rm api-playground:latest pytest -v
+
       - name: Run Dockerfile creation
         run: bash scripts/docker_build.sh
 
