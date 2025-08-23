@@ -1,6 +1,6 @@
 from src.main import app
 
-
+# Test the home endpoint ("/")
 def test_home_endpoint():
     with app.test_client() as client:
         response = client.get("/")
