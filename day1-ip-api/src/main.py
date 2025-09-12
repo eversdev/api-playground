@@ -22,9 +22,13 @@ def home():
     agent = request.headers.get("User-Agent")
 
     logging.info(
-        f"Received {request.method} at {request.path} from {request.remote_addr}"
-        f" query param is {lang} and client is {agent}"
+        f"Received {request.method} at {request.path} from {request.remote_addr} "
+        f"query param is {lang} and client is {agent}"
     )
+
+    status_code = 200
+    response_body = "<h1>Hello World</h1>"
+    logging.info(f"Response sent | status: {status_code} | body: {response_body}")
 
     return "<h1>Hello World</h1>"
 
@@ -44,9 +48,13 @@ def greet(name):
     agent = request.headers.get("User-Agent")
 
     logging.info(
-        f"Received {request.method} at {name} from {request.remote_addr}"
+        f"Received {request.method} at {name} from {request.remote_addr} "
         f"query param is {lang} and client is {agent}"
     )
+
+    status_code = 200
+    response_body = f"Hello {name}!"
+    logging.info(f"Response sent | status: {status_code} | body: {response_body}")
 
     return f"Hello {name}!"
 
