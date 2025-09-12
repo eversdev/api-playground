@@ -18,8 +18,12 @@ def home():
     Returns:
         str: An HTML string containing "Hello World".
     """
+    lang = request.args.get("lang")
+    agent = request.headers.get("User-Agent")
+
     logging.info(
         f"Received {request.method} at {request.path} from {request.remote_addr}"
+        f" query param is {lang} and client is {agent}"
     )
 
     return "<h1>Hello World</h1>"
@@ -36,7 +40,13 @@ def greet(name):
     Returns:
         str: A greeting message that includes the given name.
     """
-    logging.info(f"Received {request.method} at {name} from {request.remote_addr}")
+    lang = request.args.get("lang")
+    agent = request.headers.get("User-Agent")
+
+    logging.info(
+        f"Received {request.method} at {name} from {request.remote_addr}"
+        f"query param is {lang} and client is {agent}"
+    )
 
     return f"Hello {name}!"
 
