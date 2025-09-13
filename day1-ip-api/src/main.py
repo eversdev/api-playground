@@ -18,8 +18,19 @@ def home():
     Returns:
         str: An HTML string containing "Hello World".
     """
-    lang = request.args.get("lang")
+    lang_str = request.args.get("lang", "0")
+    try:
+        lang = int(lang_str)
+    except ValueError as e:
+        logging.exception("Invalid parameter")
+        lang = 0
+
     agent = request.headers.get("User-Agent")
+    try:
+        agent = agent.upper()
+    except AttributeError as e:
+        logging.exception("Invalid method used, value is not a string")
+        agent = ""
 
     logging.info(
         f"Received {request.method} at {request.path} from {request.remote_addr} "
@@ -44,8 +55,19 @@ def greet(name):
     Returns:
         str: A greeting message that includes the given name.
     """
-    lang = request.args.get("lang")
+    lang_str = request.args.get("lang", "0")
+    try:
+        lang = int(lang_str)
+    except ValueError as e:
+        logging.exception("Invalid parameter")
+        lang = 0
+
     agent = request.headers.get("User-Agent")
+    try:
+        agent = agent.upper()
+    except AttributeError as e:
+        logging.exception("Invalid method used, value is not a string")
+        agent = ""
 
     logging.info(
         f"Received {request.method} at {name} from {request.remote_addr} "
