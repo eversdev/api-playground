@@ -91,6 +91,12 @@ def greet(name):
         return "<h1>Unexpected error</h1>", 500
 
 
+@app.errorhandler(Exception)
+def handle_exception(e):
+    logging.exception("Unhandled exception occured")
+    return "<h1>Unhandled exception</h1>", 500
+
+
 if __name__ == "__main__":
     print("Started")
     app.run("0.0.0.0", port=5000, debug=True)
