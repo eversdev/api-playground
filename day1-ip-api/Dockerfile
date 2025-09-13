@@ -1,5 +1,6 @@
 # Use the official Python 3.11 slim image as the base
 FROM python:3.11
+ENV PYTHONUNBUFFERED=1
 
 
 # Set the working directory inside the container
