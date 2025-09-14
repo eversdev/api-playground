@@ -20,8 +20,12 @@ def test_greet_endpoint():
 
 
 @patch("src.main.home.int")
-def test_home_endpoint_failure():
-    pass
+def test_home_endpoint_failure(mock_int):
+    with app.test_client() as client:
+        mock_int.side_effect = ZeroDivisionError
+        response = client.get("/")
+        assert response.status_code == 500
+        assert response.data.decode("utf-8") == "<h1>Unexpected error</h1>"
 
 
 def test_greet_endpoint_failure():
