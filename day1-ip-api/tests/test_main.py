@@ -19,7 +19,7 @@ def test_greet_endpoint():
         assert response.status_code == 200
 
 
-@patch("src.main.home.int")
+@patch("src.main.int")
 def test_home_endpoint_failure(mock_int):
     with app.test_client() as client:
         mock_int.side_effect = ZeroDivisionError
@@ -28,7 +28,7 @@ def test_home_endpoint_failure(mock_int):
         assert response.data.decode("utf-8") == "<h1>Unexpected error</h1>"
 
 
-@patch("src.main.greet.int")
+@patch("src.main.int")
 def test_greet_endpoint_failure(mock_int):
     with app.test_client() as client:
         mock_int.side_effect = ZeroDivisionError
