@@ -18,7 +18,7 @@ jobs:
 
 
       - name: Install dependencies
-        run: pip install -r day1-ip-api/requirements.txt
+        run: pip install -r Flask_version/day1-ip-api/requirements.txt
 
      # - name: Lint with flake8
      #   run: flake8 .
@@ -30,10 +30,10 @@ jobs:
         run: isort .
 
       - name: Automate tests
-        run: pytest -v
+        run: pytest -v Flask_version/day1-ip-api
 
       - name: Build Docker image
-        run: docker build -t api-playground:latest day1-ip-api
+        run:  docker build -t api-playground:latest Flask_version/day1-ip-api
 
       - name: Run containerised tests and remove container
         run: docker run --rm api-playground:latest pytest -v

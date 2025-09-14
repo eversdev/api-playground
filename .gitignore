@@ -3,4 +3,6 @@ retro*
 __pycache__/
 *.pyc
 .idea/
+complete_day_1.txt
+
 

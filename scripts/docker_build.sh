@@ -3,7 +3,7 @@
 dir="$(pwd)"
 
 # Loop through day1*, day2*, day3* only
-for day_dir in "$dir"/day{1..3}*; do
+for day_dir in "$dir"/Flask_version/day{1..3}*; do
     # Check if it's actually a directory
     if [ -d "$day_dir" ]; then
         echo "Found directory: $day_dir"
