@@ -1,0 +1,19 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+
+# Git
+.git
+.gitignore
+
+# Editor/IDE settings
+.vscode/
+.idea/
+
+# Local environment files
+.env
