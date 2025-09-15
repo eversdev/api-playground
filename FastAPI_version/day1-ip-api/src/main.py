@@ -17,4 +17,4 @@ def home(request: Request):
 
     logger.info(f"The {method} method was called and the url path was {url}")
 
-    return "Hello world"
+    return {"message": "Hello world"}
