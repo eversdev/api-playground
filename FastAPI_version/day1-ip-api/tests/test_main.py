@@ -7,7 +7,7 @@ def test_home_endpoint():
     with TestClient(app) as client:
         response = client.get("/")
         assert response.status_code == 200
-        assert response.text == '"Hello world"'
+        assert response.json() == {"message": "Hello world"}
 
 
 def test_greeting_endpoint():
