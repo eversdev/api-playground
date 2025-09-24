@@ -24,7 +24,17 @@ def home(request: Request):
 
 
 @app.get("/hello/{name}")
-def greeting(name: str):
+def greeting(request: Request, name: str):
+    method = request.method
+    url = request.url.path
+
+
+
+    logger.info(
+          f"The method used was {method}, the URL path was {url}, "
+          f"and the path parameter was {name}"
+          )
+
     return {"hello": name}
 
 @app.get("/sum")
