@@ -16,3 +16,11 @@ def test_greeting_endpoint():
         assert response.status_code == 200
         assert response.json() == {"hello": "john"}
         
+
+
+def test_calculate_sum():
+    with TestClient(app) as client:
+        response = client.get("/sum?a=1&b=2")
+        assert response.status_code == 200
+        assert response.json() == {"sum": 3}
+
