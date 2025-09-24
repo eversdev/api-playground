@@ -38,5 +38,14 @@ def greeting(request: Request, name: str):
     return {"hello": name}
 
 @app.get("/sum")
-def calculate_sum(a:int, b:int):
+def calculate_sum(request: Request, a:int, b:int):
+
+    method = request.method
+
+    logger.info(
+        f"The method used is {method} and the "
+        f"query parameters are {a} and {b}"
+    )
+
+
     return {"sum": a + b}
