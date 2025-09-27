@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:17.6-trixie
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    ports: ["5432:5432"] #this is just for practice i will remove it after i test it
+  fastapi:
+    build: .
+    ports: ["8000:8000"]
