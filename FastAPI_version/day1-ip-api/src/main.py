@@ -49,12 +49,30 @@ def calculate_sum(request: Request, a: int, b: int):
     return {"sum": a + b}
 
 
-db_connection = psycopg2.connect(
-    user="admin", password="password", dbname="postgres", host="postgres", port=5432
-)
 
-cur = db_connection.cursor()
-cur.execute("SELECT 1")
-result = cur.fetchone()
-logger.info(f"Postgres test result: {result}")
-cur.close()
+
+
+@app.post("/add_user")
+def add_user(new_user: dict):
+
+    db_connection = psycopg2.connect(
+        user = "admin",
+        password = "password",
+        dbname = "postgres",
+        port = 5432, 
+        host = "postgres"
+    )
+
+    cur = db_connection.cursor()
+    cur.execute("INSERT INTO users (fname) VALUES (%s)", 
+        (new_user["first_name"],)
+    )
+    db_connection.commit()
+    cur.close()
+    db_connection.close()
+
+
+  
+    
+
+    return {"first_name": new_user["first_name"]}
