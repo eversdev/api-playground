@@ -2,8 +2,8 @@ import logging
 import psycopg2
 from pydantic import BaseModel
 
+import sys
 
-# import sys
 # print(sys.executable)
 
 import uvicorn
@@ -16,6 +16,15 @@ class NewUser(BaseModel):
 
 logger = logging.getLogger("uvicorn")
 app_logger = logging.getLogger(__name__)
+
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+app_logger.setLevel(logging.INFO)
+
+
+app_logger.addHandler(handler)
 
 
 app = FastAPI()
