@@ -1,9 +1,35 @@
-.venv/
-retro*
+# Python cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+
+# Local environment files
+.env
+
+# IDE / Editor settings
+.vscode/
 .idea/
-complete_day_1.txt
-*req.txt
+
+# Logs
+*.log
+
+# Docker artifacts
+*.pid
+*.pid.lock
+
+# macOS / Windows junk
+.DS_Store
+Thumbs.db
+
+# Project-specific
+retro*
+complete_day_1.txt*
+req.txt*
+4-Step*
 
 
