@@ -80,20 +80,10 @@ def add_user(new_user: NewUser = Body(...), request: Request = None):
     )
 
     with psycopg2.connect(
-        user="admin", 
-        password="password",
-        dbname="postgres",
-        port=5432, host="postgres"
+        user="admin", password="password", dbname="postgres", port=5432, host="postgres"
     ) as db_connection:
         with db_connection.cursor() as cur:
             cur.execute("INSERT INTO users (fname) VALUES (%s)", (new_user.first_name,))
         db_connection.commit()
- 
 
     return {"first_name": new_user.first_name}
-
-
-@app.get("/test_volume")
-def test_volume():
-    app_logger.info("Volume mount test successful!")
-    return {"message": "Volume mount test ✅"}
