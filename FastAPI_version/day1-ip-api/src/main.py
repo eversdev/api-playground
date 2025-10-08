@@ -16,12 +16,12 @@ class NewUser(BaseModel):
 
 logger = logging.getLogger("uvicorn")
 app_logger = logging.getLogger(__name__)
+app_logger.setLevel(logging.INFO)
 
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.INFO)
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 handler.setFormatter(formatter)
-app_logger.setLevel(logging.INFO)
 
 
 app_logger.addHandler(handler)
@@ -79,14 +79,21 @@ def add_user(new_user: NewUser = Body(...), request: Request = None):
         f"{new_user.first_name}"
     )
 
-    db_connection = psycopg2.connect(
-        user="admin", password="password", dbname="postgres", port=5432, host="postgres"
-    )
-
-    cur = db_connection.cursor()
-    cur.execute("INSERT INTO users (fname) VALUES (%s)", (new_user.first_name,))
-    db_connection.commit()
-    cur.close()
-    db_connection.close()
+    with psycopg2.connect(
+        user="admin", 
+        password="password",
+        dbname="postgres",
+        port=5432, host="postgres"
+    ) as db_connection:
+        with db_connection.cursor() as cur:
+            cur.execute("INSERT INTO users (fname) VALUES (%s)", (new_user.first_name,))
+        db_connection.commit()
+ 
 
     return {"first_name": new_user.first_name}
+
+
+@app.get("/test_volume")
+def test_volume():
+    app_logger.info("Volume mount test successful!")
+    return {"message": "Volume mount test ✅"}

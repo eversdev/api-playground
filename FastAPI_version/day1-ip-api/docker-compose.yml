@@ -8,6 +8,7 @@ services:
       POSTGRES_DB: postgres
     ports: ["5432:5432"] #this is just for practice i will remove it after i test it
   fastapi:
-    volumes: ./:/app
+    volumes: 
+      - ./:/app
     build: .
     ports: ["8000:8000"]
