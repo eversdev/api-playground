@@ -83,20 +83,20 @@ def calculate_sum(request: Request, a: int, b: int):
         f"The method used is {method} and the " f"query parameters are {a} and {b}"
     )
 
-    app_logger.info(f'Counter request for /sum endpoint: {counter_sum}')
+    app_logger.info(f"Counter request for /sum endpoint: {counter_sum}")
 
     return {"sum": a + b}
 
 
 @app.post("/add_user")
-def add_user(new_user: NewUser = Body(...), request: Request = None):
+def add_user(request: Request, new_user: NewUser = Body(...)):
 
     global counter_add_user
     counter_add_user += 1
 
-    method = request.method if request else "N/A"
-    host = request.client.host if request else "N/A"
-    port = request.client.port if request else "N/A"
+    method = request.method 
+    host = request.client.host 
+    port = request.client.port 
 
     app_logger.info(
         f"The endpoint used {method} and the host of the client "
