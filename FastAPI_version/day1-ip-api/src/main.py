@@ -3,6 +3,7 @@ import psycopg2
 from pydantic import BaseModel
 
 import sys
+import os
 
 # print(sys.executable)
 
@@ -80,7 +81,7 @@ def add_user(new_user: NewUser = Body(...), request: Request = None):
     )
 
     with psycopg2.connect(
-        user="admin", password="password", dbname="postgres", port=5432, host="postgres"
+        user=os.environ["POSTGRES_USER"], password=os.environ["POSTGRES_PASSWORD"], dbname=os.environ["POSTGRES_DB"], port=5432, host="postgres"
     ) as db_connection:
         with db_connection.cursor() as cur:
             cur.execute("INSERT INTO users (fname) VALUES (%s)", (new_user.first_name,))
