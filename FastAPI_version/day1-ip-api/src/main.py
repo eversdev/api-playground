@@ -31,19 +31,33 @@ app_logger.addHandler(handler)
 app = FastAPI()
 
 
+counter_home = 0
+counter_hello = 0
+counter_sum = 0
+counter_add_user = 0
+
+
 @app.get("/")
 def home(request: Request):
+
+    global counter_home
+    counter_home += 1
 
     method = request.method
     url = request.url.path
 
     logger.info(f"The {method} method was called and the url path was {url}")
+    app_logger.info(f"Counter request for / endpoint: {counter_home}")
 
     return {"message": "Hello world"}
 
 
 @app.get("/hello/{name}")
 def greeting(request: Request, name: str):
+
+    global counter_hello
+    counter_hello += 1
+
     method = request.method
     url = request.url.path
 
@@ -52,11 +66,16 @@ def greeting(request: Request, name: str):
         f"and the path parameter was {name}"
     )
 
+    app_logger.info(f'Counter request for /hello/{{name}} endpoint: {counter_hello}')
+
     return {"hello": name}
 
 
 @app.get("/sum")
 def calculate_sum(request: Request, a: int, b: int):
+
+    global counter_sum
+    counter_sum += 1
 
     method = request.method
 
@@ -64,11 +83,16 @@ def calculate_sum(request: Request, a: int, b: int):
         f"The method used is {method} and the " f"query parameters are {a} and {b}"
     )
 
+    app_logger.info(f'Counter request for /sum endpoint: {counter_sum}')
+
     return {"sum": a + b}
 
 
 @app.post("/add_user")
 def add_user(new_user: NewUser = Body(...), request: Request = None):
+
+    global counter_add_user
+    counter_add_user += 1
 
     method = request.method if request else "N/A"
     host = request.client.host if request else "N/A"
@@ -81,10 +105,16 @@ def add_user(new_user: NewUser = Body(...), request: Request = None):
     )
 
     with psycopg2.connect(
-        user=os.environ["POSTGRES_USER"], password=os.environ["POSTGRES_PASSWORD"], dbname=os.environ["POSTGRES_DB"], port=5432, host="postgres"
+        user=os.environ["POSTGRES_USER"],
+        password=os.environ["POSTGRES_PASSWORD"],
+        dbname=os.environ["POSTGRES_DB"],
+        port=5432,
+        host="postgres",
     ) as db_connection:
         with db_connection.cursor() as cur:
             cur.execute("INSERT INTO users (fname) VALUES (%s)", (new_user.first_name,))
         db_connection.commit()
+
+    app_logger.info(f"Counter request for add_user endpoint: {counter_add_user}")
 
     return {"first_name": new_user.first_name}
