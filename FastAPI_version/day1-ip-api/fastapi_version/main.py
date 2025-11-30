@@ -118,3 +118,19 @@ def add_user(request: Request, new_user: NewUser = Body(...)):
     app_logger.info(f"Counter request for add_user endpoint: {counter_add_user}")
 
     return {"first_name": new_user.first_name}
+
+@app.get("/metrics")
+def metrics():
+    metrics_counters = {
+        "home_requests_total": counter_home,
+        "hello_requests_total": counter_hello,
+        "sum_requests_total": counter_sum,
+        "add_user_requests_total": counter_add_user
+    }
+
+    lines = []
+    for key, value in metrics_counters.items():
+        line = f'{key} {value}' #format each line
+        lines.append(line)
+
+    return '\n'.join(lines)
