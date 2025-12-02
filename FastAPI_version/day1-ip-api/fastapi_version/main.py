@@ -35,7 +35,8 @@ counter_hello = 0
 counter_sum = 0
 counter_add_user = 0
 
-network_service_error = ["server", "port", "Connection refused", "TCP/IP"]
+network_service_error = ["Connection refused", "could not connect to server", "TCP/IP", "timeout"]
+credentials_error = ["password authentication failed", "role does not exist", "FATAL", "database"]
 
 
 @app.get("/")
@@ -112,10 +113,19 @@ def add_user(request: Request, new_user: NewUser = Body(...)):
                 cur.execute("INSERT INTO users (fname) VALUES (%s)", (new_user.first_name,))
             db_connection.commit()
     except OperationalError as e:
+        error_msg = ' '.join(str(e).split())  # normalize spaces
 
         if any(key in str(e) for key in network_service_error):
-            app_logger.warning(f'Network/service error while connecting to DB — check host/port or DB service')
-        app_logger.warning(f"DB connection failed {e}")
+            app_logger.warning(f"Network/service error while connecting to DB — check host/port or DB service")
+
+        elif any(key in str(e) for key in credentials_error):
+            app_logger.warning(f"Invalid DB credentials: check username, password, or database name")
+
+        app_logger.warning(f"DB connection failed {error_msg}")
+
+
+
+
 
     app_logger.info(f"Counter request for add_user endpoint: {counter_add_user}")
 
