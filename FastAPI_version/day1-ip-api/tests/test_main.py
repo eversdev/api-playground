@@ -1,4 +1,7 @@
 from fastapi.testclient import TestClient
+from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, MagicMock
+
 
 from fastapi_version.main import app
 
@@ -24,3 +27,33 @@ def test_calculate_sum():
         assert response.status_code == 200
         assert response.json() == {"sum": 3}
 
+
+
+from unittest.mock import patch, MagicMock
+from fastapi.testclient import TestClient
+from fastapi_version.main import app
+
+def test_add_user_creates_db_record():
+    with patch("fastapi_version.main.psycopg2.connect") as mock_connect, \
+         patch.dict("os.environ", {
+             "POSTGRES_USER": "testuser",
+             "POSTGRES_PASSWORD": "testpass",
+             "POSTGRES_DB": "testdb"
+         }):
+
+        mock_connection = MagicMock()
+        mock_cursor = MagicMock()
+
+        mock_connect.return_value.__enter__.return_value = mock_connection
+
+        mock_connection.cursor.return_value.__enter__.return_value = mock_cursor
+
+        mock_cursor.execute.return_value = None
+
+        client = TestClient(app)
+        payload = {"first_name": "Alice", "department_id": 1}
+        response = client.post("/add_user", json=payload)
+
+        assert response.status_code == 200
+        mock_cursor.execute.assert_called()   # ensure SQL execute was called
+        mock_connection.commit.assert_called()  # ensure commit was called
