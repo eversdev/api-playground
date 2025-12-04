@@ -25,35 +25,78 @@ class NewUser(BaseModel):
 
 # Test model for constraint violations
 class NewUserTest(BaseModel):
+    """
+    Pydantic model used for testing constraint violations when creating a user.
+
+    Fields:
+    - first_name: Optional string. Allows NULL testing.
+    - department_id: Optional integer. Allows foreign key violation testing.
+    """
     first_name: Optional[str] = None  # allows NULL testing
     department_id: Optional[int] = None  # allows FK violation testing
 
 
+
+# -------------------------------
+# Logging Setup
+# -------------------------------
+
+# Main logger used by Uvicorn server
 logger = logging.getLogger("uvicorn")
+
+# Application-specific logger for internal logs
 app_logger = logging.getLogger(__name__)
 app_logger.setLevel(logging.INFO)
 
+
+# Stream handler to output logs to standard output (console)
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.INFO)
+
+# Log format: timestamp, logger name, level, message
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 handler.setFormatter(formatter)
 
+
+# Attach the handler to the application logger
 app_logger.addHandler(handler)
 
+# -------------------------------
+# FastAPI Application Instance
+# -------------------------------
 app = FastAPI()
 
+
+# -------------------------------
+# Request Counters
+# -------------------------------
+# Track the number of requests to each endpoint
 counter_home = 0
 counter_hello = 0
 counter_sum = 0
 counter_add_user = 0
 
+
+# -------------------------------
+# Error Categories
+# -------------------------------
+# Lists of error messages used to categorize database connection and constraint errors
 network_service_error = ["Connection refused", "could not connect to server", "TCP/IP", "timeout"]
 credentials_error = ["password authentication failed", "role does not exist", "FATAL", "database"]
 constraint_error = ["null value in column", "duplicate key value violates unique", "violates foreign key constraint"]
 
 
 @app.get("/")
-def home(request: Request):
+def home(request: Request) -> dict[str, str]:
+    """
+    Root endpoint that returns a simple greeting message.
+
+    Parameters:
+    - request: FastAPI Request object, used to access method and URL info.
+
+    Returns:
+    - A dictionary with a greeting message.
+    """
     global counter_home
     counter_home += 1
 
@@ -67,7 +110,17 @@ def home(request: Request):
 
 
 @app.get("/hello/{name}")
-def greeting(request: Request, name: str):
+def greeting(request: Request, name: str) -> dict[str, str]:
+    """
+    Endpoint that returns a personalized greeting message.
+
+    Parameters:
+    - request: FastAPI Request object, used to access request metadata (method, URL, etc.).
+    - name: Path parameter (string) representing the name to greet.
+
+    Returns:
+    - A dictionary with a single key "hello" containing the greeting message.
+    """
     global counter_hello
     counter_hello += 1
 
@@ -85,7 +138,18 @@ def greeting(request: Request, name: str):
 
 
 @app.get("/sum")
-def calculate_sum(request: Request, a: int, b: int):
+def calculate_sum(request: Request, a: int, b: int) -> dict[str, int]:
+    """
+    Endpoint that calculates the sum of two integers provided as query parameters.
+
+    Parameters:
+    - request: FastAPI Request object, used to access request metadata (method, URL, etc.).
+    - a: First integer query parameter.
+    - b: Second integer query parameter.
+
+    Returns:
+    - A dictionary with a single key "sum" containing the result of a + b.
+    """
     global counter_sum
     counter_sum += 1
 
@@ -101,7 +165,29 @@ def calculate_sum(request: Request, a: int, b: int):
 
 
 @app.post("/add_user")
-def add_user(request: Request, incoming_user: dict = Body(...)):
+def add_user(request: Request, incoming_user: dict = Body(...)) -> dict[str, str]:
+    """
+    Endpoint to add a new user to the database.
+
+    This endpoint dynamically selects the appropriate Pydantic model
+    based on the environment variable TEST_MODE. In test mode, it allows
+    optional fields to test constraint violations. In production mode, it
+    enforces required fields.
+
+    Parameters:
+    - request: FastAPI Request object, used to access request metadata (method, client host/port, etc.).
+    - incoming_user: Dictionary payload from the request body containing:
+        - first_name: string
+        - department_id: integer
+
+    Returns:
+    - A dictionary with the "first_name" of the created user.
+
+    Notes:
+    - Handles database connection errors, integrity errors (e.g., constraint violations),
+      and data errors, logging warnings for each.
+    - Uses psycopg2 to connect to a PostgreSQL database using environment variables for credentials.
+    """
     global counter_add_user
     counter_add_user += 1
 
@@ -160,7 +246,21 @@ def add_user(request: Request, incoming_user: dict = Body(...)):
 
 
 @app.get("/metrics")
-def metrics():
+def metrics() -> Response:
+    """
+    Endpoint that returns Prometheus-style metrics for the application.
+
+    Tracks the total number of requests made to each endpoint:
+    - home_requests_total: number of requests to the "/" endpoint
+    - hello_requests_total: number of requests to the "/hello/{name}" endpoint
+    - sum_requests_total: number of requests to the "/sum" endpoint
+    - add_user_requests_total: number of requests to the "/add_user" endpoint
+
+    Returns:
+    - A plain text Response containing the metrics in the format:
+      metric_name value
+      (one per line), suitable for scraping by monitoring tools.
+    """
     metrics_counters = {
         "home_requests_total": counter_home,
         "hello_requests_total": counter_hello,
