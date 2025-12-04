@@ -1,9 +1,16 @@
+import pytest
+
+
 from fastapi.testclient import TestClient
 from unittest.mock import patch, Mock
 from unittest.mock import patch, Mock, MagicMock
 
 
 from fastapi_version.main import app
+
+@pytest.fixture
+def client():
+    return TestClient(app)
 
 
 def test_home_endpoint():
@@ -27,11 +34,6 @@ def test_calculate_sum():
         assert response.status_code == 200
         assert response.json() == {"sum": 3}
 
-
-
-from unittest.mock import patch, MagicMock
-from fastapi.testclient import TestClient
-from fastapi_version.main import app
 
 def test_add_user_creates_db_record():
     with patch("fastapi_version.main.psycopg2.connect") as mock_connect, \
@@ -57,3 +59,5 @@ def test_add_user_creates_db_record():
         assert response.status_code == 200
         mock_cursor.execute.assert_called()   # ensure SQL execute was called
         mock_connection.commit.assert_called()  # ensure commit was called
+
+

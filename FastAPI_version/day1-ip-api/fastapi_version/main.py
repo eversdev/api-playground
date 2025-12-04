@@ -11,7 +11,7 @@ import os
 # print(sys.executable)
 
 import uvicorn
-from fastapi import FastAPI, Request, Body
+from fastapi import FastAPI, Request, Body, Response
 
 # Environment flag
 TEST_MODE = os.getenv("TEST_MODE", "0") == "1"
@@ -168,9 +168,8 @@ def metrics():
         "add_user_requests_total": counter_add_user
     }
 
-    lines = []
-    for key, value in metrics_counters.items():
-        line = f'{key} {value}'  # format each line
-        lines.append(line)
 
-    return '\n'.join(lines)
+    lines = [f"{key} {value}" for key, value in metrics_counters.items()]
+    text = "\n".join(lines)
+
+    return Response(content=text, media_type="text/plain")
